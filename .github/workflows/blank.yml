@@ -1,0 +1,36 @@
+name: Update Text Every 5 Minutes
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Uruchamia co 5 minut
+
+jobs:
+  update-text:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Zmiana tekstu w pliku
+      run: |
+        # Odczytanie zawartości pliku
+        current_text=$(cat plik.txt)
+        
+        # Sprawdzenie, czy tekst to 'klucz1'
+        if [ "$current_text" == "klucz1" ]; then
+          # Zmiana na 'klucz2'
+          echo "klucz2" > plik.txt
+        else
+          # Inna opcja: Generowanie losowej liczby
+          random_number=$((RANDOM))
+          echo $random_number > plik.txt
+        fi
+
+    - name: Commit i push zmian
+      run: |
+        git config --global user.email "your-email@example.com"
+        git config --global user.name "your-username"
+        git add plik.txt
+        git commit -m "Automatyczna aktualizacja tekstu"
+        git push
